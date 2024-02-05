@@ -5,6 +5,7 @@ import Reader from "./components/Reader";
 import { AppMode } from "./contexts/AppContext/AppContextProvider";
 import AppContext from "./contexts/AppContext/AppContext";
 import Preview from "./components/Preview";
+import { Helmet } from "react-helmet";
 
 function App() {
   const { state } = useContext(AppContext);
@@ -24,7 +25,14 @@ function App() {
     }
   };
 
-  return <Layout>{renderContent()}</Layout>;
+  return (
+    <Layout>
+      <Helmet>
+        <title>{state?.book.title}</title>
+      </Helmet>
+      {renderContent()}
+    </Layout>
+  );
 }
 
 export default App;
