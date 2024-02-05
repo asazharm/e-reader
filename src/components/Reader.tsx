@@ -27,6 +27,7 @@ const renderChapters = (
       <p className="font-bold leading-6">{chaptersCpy.shift()?.label}</p>
       {chaptersCpy.map((chapter, index) => (
         <div
+          key={index}
           className="py-3"
           onClick={() => moveToTock(chapter.href)}
           style={{
@@ -143,7 +144,7 @@ const Reader = () => {
 
       {state?.readerMode === ReaderMode.Chapters &&
         renderChapters(state.chapters, state.currentChapterIndex, moveToToc)}
-      <Progressbar />
+      {/* <Progressbar /> */}
     </>
   );
 };
