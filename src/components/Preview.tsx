@@ -24,10 +24,10 @@ const Preview = () => {
         <p className="text-xs leading-5 pb-4 text-secondary">
           {state?.book.genre}
         </p>
-        <p className="text-base  pb-4">Описание</p>
+        {/* <p className="text-base  pb-4">Описание</p>
         <p className="text-xs leading-5 text-justify tracking-wide">
           {state?.book.desc}
-        </p>
+        </p> */}
       </div>
     </div>
   );

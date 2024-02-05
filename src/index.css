@@ -7,3 +7,7 @@
 body {
   font-family: "Verdana", sans-serif;
 }
+
+#reader button {
+  display: none;
+}

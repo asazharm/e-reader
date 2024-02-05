@@ -25,6 +25,7 @@ export interface IAppState {
   book: Book;
   chapters: NavItem[];
   location: string;
+  currentChapterIndex: number;
 }
 
 const initalState: IAppState = {
@@ -38,6 +39,7 @@ const initalState: IAppState = {
   },
   chapters: [],
   location: "",
+  currentChapterIndex: 1,
 };
 
 type TAppContextProviderProps = {
@@ -71,6 +73,8 @@ const appReducer = (state: IAppState, action: TAppReducerAction) => {
       return { ...state, chapters: action.value as NavItem[] };
     case "SET_LOCATION":
       return { ...state, location: action.value as string };
+    case "SET_CHAPTERINDEX":
+      return { ...state, currentChapterIndex: action.value as number };
     default:
       return state;
   }
