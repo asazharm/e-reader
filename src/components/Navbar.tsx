@@ -59,7 +59,10 @@ const Navbar = () => {
     <div
       style={{
         transform: `translateY(${
-          state?.readerMode === ReaderMode.Read ? "-3rem" : 0
+          state?.appMode === AppMode.Read &&
+          state.readerMode === ReaderMode.Read
+            ? "-3rem"
+            : 0
         })`,
       }}
       className="container z-50 flex justify-center align-middle h-12 shadow sticky top-0 bg-white transition-all"
