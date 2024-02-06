@@ -23,7 +23,7 @@ const renderChapters = (
   const chaptersCpy = [...chapters];
 
   return (
-    <div className="absolute top-12 z-40 min-h-100dvh w-full bg-white p-4">
+    <div className="absolute z-40 h-[calc(100dvh-3rem)] w-full bg-white p-4 overflow-scroll">
       <p className="font-bold leading-6">{chaptersCpy.shift()?.label}</p>
       {chaptersCpy.map((chapter, index) => (
         <div
