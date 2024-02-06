@@ -59,9 +59,9 @@ const Reader = () => {
   useEffect(() => {
     if (!rendition.current || !state?.location) return;
     const displayedLocation = rendition.current.currentLocation();
-    dispatch({
+    displayedLocation?.start && dispatch({
       type: "SET_CHAPTERINDEX",
-      value: displayedLocation?.start.index,
+      value: displayedLocation?.start?.index,
     }); //problems with "react-reader" types.
   }, [state?.location]);
 
