@@ -1,11 +1,20 @@
-import React, { ReactNode, useContext, useEffect, useRef } from "react";
+import { ReactNode, useContext, useEffect, useRef } from "react";
 import AppContext from "@/contexts/AppContext/AppContext";
 import { ReaderMode } from "@/contexts/AppContext/AppContextProvider";
 import { IReactReaderStyle, ReactReader } from "react-reader";
 import type { NavItem, Rendition } from "epubjs";
-import Progressbar from "./Progressbar";
 import { useSwipeable } from "react-swipeable";
+
 import SpinnerIcon from "@/assets/spinner.svg?react";
+
+import { Settings } from "@/components/Settings";
+import Progressbar from "@/components/Progressbar";
+import Chapters from "@/components/Chapters";
+import AddedBookmark from "@/components/AddedBookmark";
+import Bookmarks from "@/components/Bookmarks";
+
+import { useReaderSettings } from "./use-reader-settings.ts";
+import { useReaderPagination } from "./use-reader-pagination.ts";
 
 const loadingView = (): ReactNode => {
   return (
@@ -15,36 +24,16 @@ const loadingView = (): ReactNode => {
   );
 };
 
-const renderChapters = (
-  chapters: NavItem[],
-  currentChapterIndex: number,
-  moveToTock: (cfi: string) => void
-): ReactNode => {
-  const chaptersCpy = [...chapters];
-
-  return (
-    <div className="absolute z-40 h-[calc(100dvh-3rem)] w-full bg-white p-4 overflow-scroll">
-      <p className="font-bold leading-6">{chaptersCpy.shift()?.label}</p>
-      {chaptersCpy.map((chapter, index) => (
-        <div
-          key={index}
-          className="py-3"
-          onClick={() => moveToTock(chapter.href)}
-          style={{
-            background: currentChapterIndex === index ? "#0000000A" : "white",
-          }}
-        >
-          <p className="text-sm leading-5">{chapter.label}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const Reader = () => {
   const { state, dispatch } = useContext(AppContext);
 
-  const rendition = useRef<Rendition | undefined>(undefined);
+  const rendition = useRef<Rendition | null>(null);
+
+  const { font, setFont, fontSize, setFontSize, brightness, setBrightness } =
+    useReaderSettings(rendition);
+
+  const { pagination, handleLocationChange, progress, handlePageChange } =
+    useReaderPagination(rendition);
 
   const onClickHandle = () => {
     dispatch({
@@ -59,20 +48,18 @@ const Reader = () => {
   useEffect(() => {
     if (!rendition.current || !state?.location) return;
     const displayedLocation = rendition.current.currentLocation();
-    displayedLocation?.start && dispatch({
-      type: "SET_CHAPTERINDEX",
-      value: displayedLocation?.start?.index,
-    }); //problems with "react-reader" types.
+
+    displayedLocation?.start &&
+      dispatch({
+        type: "SET_CHAPTERINDEX",
+        value: displayedLocation?.start?.index,
+      }); //problems with "react-reader" types.
   }, [state?.location]);
 
-  // useEffect(() => {
-  //   if (!rendition.current) return;
-  //   rendition.current.location
-  //   percentageFromCfi;
-  // }, [rendition]);
-
-  const onLocationChanged = (epubcfi: string) =>
+  const onLocationChanged = (epubcfi: string) => {
     dispatch({ type: "SET_LOCATION", value: epubcfi });
+    handleLocationChange();
+  };
 
   const tocChangedHandle = (chapters: NavItem[]) => {
     dispatch({ type: "SET_CHAPTERS", value: chapters });
@@ -128,23 +115,55 @@ const Reader = () => {
           }}
           loadingView={loadingView()}
         />
+
         <div
           className="z-30 absolute top-0 left-0 w-1/3 h-full"
           onClick={prevPageHandle}
-        ></div>
+        />
+
         <div
           className="z-30 absolute top-0 left-1/3 w-1/3 h-full"
           onClick={onClickHandle}
-        ></div>
+        />
+
         <div
           className="z-30 absolute top-0 left-2/3 w-1/3 h-full"
           onClick={nextPageHandle}
-        ></div>
+        />
       </div>
 
-      {state?.readerMode === ReaderMode.Chapters &&
-        renderChapters(state.chapters, state.currentChapterIndex, moveToToc)}
-      {/* <Progressbar /> */}
+      {state?.readerMode === ReaderMode.Chapters && (
+        <Chapters
+          chapters={state.chapters}
+          moveToTock={moveToToc}
+          currentIndex={state.currentChapterIndex}
+        />
+      )}
+
+      {state?.readerMode === ReaderMode.SettingsView && (
+        <Settings
+          fontSize={fontSize}
+          setFontSize={setFontSize}
+          brightness={brightness}
+          setBrightness={setBrightness}
+          rendition={rendition.current}
+          font={font}
+          setFont={setFont}
+        />
+      )}
+
+      {state?.readerMode === ReaderMode.Bookmarks && <Bookmarks bookmarks={state.bookmarks} />}
+
+      {state?.readerMode === ReaderMode.AddedBookmark && <AddedBookmark />}
+
+      <Progressbar
+        setPage={handlePageChange}
+        total={pagination?.totalPages}
+        page={pagination?.currentPage}
+        title={state?.book.title}
+        chapter={state?.chapters[state?.currentChapterIndex || 0]?.label}
+        value={progress}
+      />
     </>
   );
 };

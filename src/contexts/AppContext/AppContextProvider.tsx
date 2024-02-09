@@ -6,9 +6,13 @@ export enum AppMode {
   Read = "read",
   Preview = "preview",
 }
+
 export enum ReaderMode {
   Read = "read",
   Settings = "settings",
+  SettingsView = "SettingsView",
+  AddedBookmark = "AddedBookmark",
+  Bookmarks = "Bookmarks",
   Chapters = "chapters",
 }
 
@@ -19,6 +23,13 @@ type Book = {
   desc: string;
 };
 
+export interface Bookmark {
+  page: number;
+  title: string;
+  author: string;
+  chapter: string;
+}
+
 export interface IAppState {
   appMode: AppMode;
   readerMode: ReaderMode;
@@ -26,6 +37,8 @@ export interface IAppState {
   chapters: NavItem[];
   location: string;
   currentChapterIndex: number;
+  currentPage: number;
+  bookmarks: Bookmark[];
 }
 
 const initalState: IAppState = {
@@ -40,6 +53,8 @@ const initalState: IAppState = {
   chapters: [],
   location: "",
   currentChapterIndex: 1,
+  currentPage: 0,
+  bookmarks: [],
 };
 
 type TAppContextProviderProps = {
@@ -75,6 +90,10 @@ const appReducer = (state: IAppState, action: TAppReducerAction) => {
       return { ...state, location: action.value as string };
     case "SET_CHAPTERINDEX":
       return { ...state, currentChapterIndex: action.value as number };
+    case "SET_CURRPAGE":
+      return { ...state, currentPage: action.value as number };
+    case "ADD_BOOKMARK":
+      return { ...state, bookmarks: [...state.bookmarks, action.value] };
     default:
       return state;
   }

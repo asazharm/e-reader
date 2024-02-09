@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import "./App.css";
 import Layout from "./components/Layout";
-import Reader from "./components/Reader";
+import { Reader } from "./components/Reader";
 import { AppMode } from "./contexts/AppContext/AppContextProvider";
 import AppContext from "./contexts/AppContext/AppContext";
 import Preview from "./components/Preview";
