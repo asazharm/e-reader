@@ -1,6 +1,7 @@
 import { ReactNode, useReducer } from "react";
 import AppContext from "./AppContext";
 import type { NavItem } from "epubjs";
+import bookmarks from '@/components/Bookmarks'
 
 export enum AppMode {
   Read = "read",
@@ -38,6 +39,7 @@ export interface IAppState {
   location: string;
   currentChapterIndex: number;
   currentPage: number;
+  bookmarkIconHighlighted: boolean;
   bookmarks: Bookmark[];
 }
 
@@ -54,6 +56,7 @@ const initalState: IAppState = {
   location: "",
   currentChapterIndex: 1,
   currentPage: 0,
+  bookmarkIconHighlighted: false,
   bookmarks: [],
 };
 
@@ -94,6 +97,8 @@ const appReducer = (state: IAppState, action: TAppReducerAction) => {
       return { ...state, currentPage: action.value as number };
     case "ADD_BOOKMARK":
       return { ...state, bookmarks: [...state.bookmarks, action.value] };
+    case "SET_BOOKMARK_ACTIVE":
+      return { ...state, bookmarkIconHighlighted: action.value };
     default:
       return state;
   }

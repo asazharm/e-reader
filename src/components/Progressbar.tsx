@@ -24,19 +24,19 @@ const Progressbar: FC<ProgressbarProps> = ({
   const { state } = useContext(AppContext);
 
   return [ReaderMode.Read, ReaderMode.Settings].includes(state?.readerMode) ? (
-    <div className="absolute bottom-0 z-50 w-full bg-white">
+    <div className="absolute bottom-0 z-50 w-full bg-[#F5F5F5] border-t border-[#D1D2D4]">
       {state?.readerMode === ReaderMode.Settings ? (
         <div className="p-4">
           <div className="flex flex-col gap-2 mb-6">
-            <div className="flex justify-between text-secondary font-bold text-lg">
+            <div className="flex justify-between text-secondary font-bold text-sm">
               <p>{title}</p>
 
-              <p>
+              <p className="whitespace-nowrap">
                 {page} из {total}
               </p>
             </div>
 
-            <div className="text-secondary text-lg">{chapter}</div>
+            <div className="text-secondary">{chapter}</div>
           </div>
 
           <Slider

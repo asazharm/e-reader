@@ -8,7 +8,7 @@ interface BookmarksProps {
 
 const Bookmarks: FC<BookmarksProps> = ({ bookmarks = [] }) => (
   <Sidebar right={false}>
-    {bookmarks.map((bookmark) => (
+    {bookmarks.length ? bookmarks.map((bookmark) => (
       <div
         key={bookmark.page}
         className="flex justify-between items-center py-3 px-4"
@@ -23,7 +23,7 @@ const Bookmarks: FC<BookmarksProps> = ({ bookmarks = [] }) => (
 
         <p className="text-sm font-bold">{bookmark.page}</p>
       </div>
-    ))}
+    )) : (<div className="flex flex-col justify-center items-center h-full"><p className="mb-20">Нет закладок</p></div>)}
   </Sidebar>
 );
 

@@ -5,12 +5,14 @@ import { ReaderMode } from "@/contexts/AppContext/AppContextProvider.tsx";
 interface SidebarProps {
   right?: boolean;
   center?: boolean;
+  fullHeight?: boolean;
 }
 
 const Sidebar: FC<PropsWithChildren<SidebarProps>> = ({
   children,
   right = true,
   center,
+  fullHeight = true,
 }) => {
   const { dispatch } = useContext(AppContext);
 
@@ -27,7 +29,7 @@ const Sidebar: FC<PropsWithChildren<SidebarProps>> = ({
         style={{
           backgroundColor: "#3B454F66",
         }}
-        className=" z-30 fixed right-0 top-0 left-0 bottom-0"
+        className=" z-30 fixed right-0 top-0 left-0 bottom-0 select-none"
       />
 
       <div
@@ -40,7 +42,7 @@ const Sidebar: FC<PropsWithChildren<SidebarProps>> = ({
             : right
             ? "right-0"
             : "left-0"
-        } bg-white h-full md:w-1/4 w-full`}
+        } bg-white  ${fullHeight ? 'h-full' : ''} md:w-1/4 w-full`}
       >
         {children}
       </div>

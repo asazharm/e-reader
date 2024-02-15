@@ -10,7 +10,6 @@ import ConfigIcon from "@/assets/config.svg?react";
 import ChaptersIcon from "@/assets/chapters.svg?react";
 import BookmarksIcon from "@/assets/bookmarks.svg?react";
 import AddBookmarkIcon from "@/assets/addBookmark.svg?react";
-import AddedBookmarkIcon from "@/assets/addedBookmark.svg?react";
 import ArrowLeftIcon from "@/assets/arrowLeft.svg?react";
 
 const Navbar = () => {
@@ -47,14 +46,7 @@ const Navbar = () => {
   };
 
   const addBookmarkHandle = () => {
-    if (state?.readerMode === ReaderMode.AddedBookmark) {
-      dispatch({
-        type: "SET_READERMODE",
-        value: ReaderMode.Settings,
-      });
-
-      return;
-    }
+    dispatch({ type: "SET_BOOKMARK_ACTIVE", value: true })
 
     dispatch({
       type: "ADD_BOOKMARK",
@@ -66,27 +58,25 @@ const Navbar = () => {
       } as Bookmark,
     });
 
-    dispatch({
-      type: "SET_READERMODE",
-      value: ReaderMode.AddedBookmark,
-    });
+    setTimeout(() => dispatch({ type: "SET_BOOKMARK_ACTIVE", value: false }), 2000)
   };
 
   const renderContent = () => {
     switch (state?.appMode) {
       case AppMode.Preview:
-        return <p className={"flex items-center text-sm"}>{"Книги"}</p>;
+        return <p className={"flex justify-center w-full items-center text-sm"}>{"Книги"}</p>;
       case AppMode.Read:
         return (
           <div className="flex justify-between items-center w-full px-4">
-            <div className="flex items-center w-full gap-2">
+            <div className="flex items-center gap-2 overflow-hidden">
               <ArrowLeftIcon
                 onClick={() => {
                   dispatch({ type: "SET_APPMODE", value: AppMode.Preview });
                 }}
+                className="min-w-min"
               />
 
-              <div className="flex flex-col">
+              <div className="flex flex-col overflow-hidden">
                 <p className={"items-center text-sm truncate ..."}>
                   {state.book.title}
                 </p>
@@ -97,7 +87,7 @@ const Navbar = () => {
               </div>
             </div>
 
-            <div className="flex">
+            <div className="flex grow">
               <ConfigIcon
                 stroke={
                   state.readerMode === ReaderMode.SettingsView
@@ -123,11 +113,14 @@ const Navbar = () => {
                 onClick={bookmarksHandle}
               />
 
-              {state.readerMode === ReaderMode.AddedBookmark ? (
-                <AddedBookmarkIcon onClick={addBookmarkHandle} />
-              ) : (
-                <AddBookmarkIcon stroke={"black"} onClick={addBookmarkHandle} />
-              )}
+              <AddBookmarkIcon
+                stroke={
+                  state?.bookmarkIconHighlighted
+                    ? "#E21A1A"
+                    : "black"
+                }
+                onClick={addBookmarkHandle}
+              />
             </div>
           </div>
         );

@@ -6,7 +6,11 @@ export const estimatePages = async (book: Book, rendition: Rendition) => {
     _locations: string[];
   };
 
+  console.log('estimatePages')
+
   if (bookLocations.total == 0) await bookLocations.generate(2048);
+
+  console.log('/estimatePages')
 
   const currentLocation = rendition.currentLocation() as unknown as Location;
   const sectionIndex = currentLocation.start.index;

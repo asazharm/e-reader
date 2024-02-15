@@ -33,7 +33,7 @@ const Settings: FC<SettingsProps> = ({
   font,
   setFont,
 }) => (
-  <Sidebar>
+  <Sidebar fullHeight={false}>
     <SettingsItem
       Icon={<BrightnessIcon />}
       label="Яркость"
